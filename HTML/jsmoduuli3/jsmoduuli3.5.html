@@ -1,30 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 5</title>
-    <script src="5.js" defer></script>
-    <link href="5.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Picture Gallery</title>
+  <style>
+    .card {
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin-bottom: 1em;
+      max-width: 400px;
+    }
+    figure {
+      margin: 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    figcaption {
+      font-style: italic;
+      font-size: 0.9em;
+      margin-top: 0.3em;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <h1>Task 5</h1>
-        </header>
-        <main>
-            <section id="pictures">
-                <!-- add articles here -->
+  <section id="gallery"></section>
 
-            </section>
-        </main>
-        <footer>
-            <p>This is a footer</p>
-        </footer>
-    </div>
+  <script>
+    const picArray = [
+      {
+        title: "After rain",
+        medium: "./img/pic3.jpg",
+        caption: "Drop of water on a plant.",
+        description: "Beautiful photo of nature after rain."
+      },
+      {
+        title: "Blue eyes",
+        medium: "./img/pic1.jpg",
+        caption: "Happy smile.",
+        description: "These blue eyes show a real joy."
+      },
+      {
+        title: "Sunrise",
+        medium: "./img/pic7.jpg",
+        caption: "Beautiful meadow.",
+        description: "Calming photo of an early morning meadow."
+      }
+    ];
+
+    const section = document.getElementById("gallery");
+
+    picArray.forEach(pic => {
+      const article = document.createElement("article");
+      article.classList.add("card");
+
+      const h2 = document.createElement("h2");
+      h2.textContent = pic.title;
+
+      const figure = document.createElement("figure");
+
+      const img = document.createElement("img");
+      img.src = pic.medium;
+      img.alt = pic.title;
+
+      const figcaption = document.createElement("figcaption");
+      figcaption.textContent = pic.caption;
+
+      figure.appendChild(img);
+      figure.appendChild(figcaption);
+
+      const p = document.createElement("p");
+      p.textContent = pic.description;
+
+      article.appendChild(h2);
+      article.appendChild(figure);
+      article.appendChild(p);
+
+      section.appendChild(article);
+    });
+  </script>
 </body>
-
 </html>

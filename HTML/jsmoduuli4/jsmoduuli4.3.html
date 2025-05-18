@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TV Series Search</title>
+  <style>
+    article {
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin-bottom: 1em;
+      max-width: 600px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0.5em 0;
+    }
+    a {
+      display: inline-block;
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Search TV Series</h1>
+  <form id="searchForm">
+    <input id="query" name="q" type="text" placeholder="Enter series name" required />
+    <input type="submit" value="Search" />
+  </form>
+
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    const resultsDiv = document.getElementById('results');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const query = document.getElementById('query').value.trim();
+      if (!query) {
+        resultsDiv.innerHTML = '<p>Please enter a search term.</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        resultsDiv.innerHTML = ''; // Clear old results
+
+        if (data.length === 0) {
+          resultsDiv.innerHTML = '<p>No results found.</p>';
+          return;
+        }
+
+        data.forEach(item => {
+          const show = item.show;
+
+          const article = document.createElement('article');
+
+          const h2 = document.createElement('h2');
+          h2.textContent = show.name;
+
+          const link = document.createElement('a');
+          link.href = show.url;
+          link.target = '_blank';
+          link.textContent = 'More details';
+
+          const img = document.createElement('img');
+          img.src = show.image?.medium || '';
+          img.alt = show.name;
+          if (!show.image) {
+            img.style.display = 'none'; // Hide img if no image available
+          }
+
+          const summaryDiv = document.createElement('div');
+          summaryDiv.innerHTML = show.summary || 'No summary available.';
+
+          article.appendChild(h2);
+          article.appendChild(link);
+          article.appendChild(img);
+          article.appendChild(summaryDiv);
+
+          resultsDiv.appendChild(article);
+        });
+      } catch (error) {
+        resultsDiv.innerHTML = `<p>Error fetching data: ${error.message}</p>`;
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
